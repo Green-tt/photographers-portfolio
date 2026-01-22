@@ -1,0 +1,787 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить фото - Photography Portfolio</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Стили для шапки */
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 60px;
+            background: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            position: relative;
+            top: 0;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+            margin-bottom: 15px;
+        }
+
+        .nav-item {
+            color: #666;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item:hover {
+            color: #4CAF50;
+        }
+
+        /* Стили для формы загрузки */
+        .upload-zone {
+            border: 3px dashed #4CAF50;
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            background: #f8fff8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .upload-zone:hover {
+            background: #f0fff0;
+            border-color: #3d8b40;
+        }
+
+        .upload-zone.drag-over {
+            background: #e8f5e8;
+            border-color: #2e7d32;
+        }
+
+        .upload-icon {
+            font-size: 40px;
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .file-input-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-input-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* Стили для выбранных файлов */
+        .selected-files {
+            margin: 25px 0;
+        }
+
+        .files-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .files-count {
+            color: #4CAF50;
+            font-weight: 500;
+        }
+
+        .clear-all {
+            background: none;
+            border: none;
+            color: #ff4444;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .clear-all:hover {
+            background: #ffeaea;
+        }
+
+        .files-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            background: white;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-icon {
+            color: #4CAF50;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+
+        .file-details {
+            flex-grow: 1;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 3px;
+            word-break: break-all;
+        }
+
+        .file-info {
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            gap: 15px;
+        }
+
+        .remove-file {
+            color: #999;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remove-file:hover {
+            color: #ff4444;
+            background: #ffeaea;
+        }
+
+        /* Стили для категорий */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .category-select {
+            width: 100%;
+            padding: 14px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #333;
+            background: white;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%234CAF50' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .category-select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .new-category-input {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .new-category-input input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .new-category-input input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        /* Кнопка отправки */
+        .submit-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Сообщения */
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Пустое состояние */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #e0e0e0;
+        }
+
+        /* Информационная панель */
+        .info-panel {
+            background: linear-gradient(135deg, #f8fff8 0%, #f0f9ff 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .info-title {
+            color: #2e7d32;
+            font-weight: 500;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-list li {
+            padding: 5px 0;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-list li i {
+            color: #4CAF50;
+            font-size: 12px;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .upload-container {
+                margin: 30px 20px;
+                padding: 25px;
+            }
+
+            .upload-zone {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="/gallery" class="logo">Photography Portfolio</a>
+    <div class="nav-container">
+        <a href="/about_me" class="nav-item">Обо мне</a>
+        <a href="/gallery" class="nav-item">Галерея</a>
+        {% if user %}
+            <!-- Для авторизованных пользователей -->
+            <a href="/upload" class="nav-item active">Добавить фото</a>
+            <a href="/categories" class="nav-item">Категории</a>
+            <!-- ТОЛЬКО для админов: ссылка на редактирование информации -->
+            {% if user.role == 'admin' %}
+            <a href="/admin/edit_about" class="nav-item">Редактировать информацию</a>
+            {% endif %}
+            <div class="user-menu">
+                <span class="nav-item" style="color: #4CAF50; font-weight: 500;">
+                    <i class="fas fa-user-circle"></i> {{ user.username }}
+                    {% if user.role == 'admin' %}
+                        <span style="font-size: 12px; background: #4CAF50; color: white; padding: 2px 6px; margin-left: 5px; border-radius: 3px;">Admin</span>
+                    {% endif %}
+                </span>
+                <a href="/logout" class="nav-item" style="color: #f44336;">
+                    <i class="fas fa-sign-out-alt"></i> Выйти
+                </a>
+            </div>
+        {% else %}
+            <!-- Для неавторизованных пользователей -->
+            <a href="/login" class="nav-item">Вход</a>
+            <a href="/register" class="nav-item">Регистрация</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="upload-container" style="
+    max-width: 700px;
+    margin: 50px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+">
+    <h1 style="text-align: center; margin-bottom: 10px; color: #333;">
+        <i class="fas fa-camera" style="color: #4CAF50; margin-right: 10px;"></i>
+        Добавить фото в галерею
+    </h1>
+    <p style="text-align: center; color: #666; margin-bottom: 30px;">
+        Загрузите свои лучшие фотографии и выберите категорию
+    </p>
+
+    <div class="info-panel">
+        <div class="info-title">
+            <i class="fas fa-info-circle"></i>
+            Информация о загрузке
+        </div>
+        <ul class="info-list">
+            <li><i class="fas fa-check-circle"></i> Поддерживаемые форматы: JPG, PNG, GIF, WebP</li>
+            <li><i class="fas fa-check-circle"></i> Максимальный размер файла: 10 MB</li>
+            <li><i class="fas fa-check-circle"></i> Можно выбрать несколько файлов одновременно</li>
+            <li><i class="fas fa-check-circle"></i> Фото будут добавлены в выбранную категорию</li>
+        </ul>
+    </div>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+        <div class="upload-zone" id="dropZone">
+            <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div class="upload-text">Перетащите фото сюда</div>
+            <div class="upload-subtext">или</div>
+            <button type="button" class="file-input-btn" id="selectFilesBtn">
+                <i class="fas fa-folder-open"></i> Выбрать файлы
+            </button>
+            <input type="file" id="fileInput" multiple accept="image/*">
+        </div>
+
+        <div class="selected-files" id="selectedFilesSection" style="display: none;">
+            <div class="files-header">
+                <span class="files-count" id="filesCount">0 файлов</span>
+                <button type="button" class="clear-all" id="clearAllBtn">
+                    <i class="fas fa-trash-alt"></i> Очистить все
+                </button>
+            </div>
+            <div class="files-list" id="filesList">
+                <!-- Список файлов будет добавляться здесь -->
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">
+                <i class="fas fa-tag" style="color: #4CAF50; margin-right: 8px;"></i>
+                Выберите категорию:
+            </label>
+            <select class="category-select" id="categorySelect" name="category">
+                <option value="Без категории">Без категории</option>
+                <option value="Природа">Природа</option>
+                <option value="Портреты">Портреты</option>
+                <option value="Города">Города</option>
+                <option value="Путешествия">Путешествия</option>
+                <option value="Архитектура">Архитектура</option>
+                <option value="Животные">Животные</option>
+                <option value="Новая категория">+ Создать новую категорию</option>
+            </select>
+            <div class="new-category-input" id="newCategoryInput">
+                <input type="text" id="newCategory" placeholder="Введите название новой категории" name="new_category">
+            </div>
+        </div>
+
+        <div class="message" id="statusMessage"></div>
+
+        <button type="button" class="submit-btn" id="submitBtn" disabled>
+            <i class="fas fa-upload"></i> Загрузить фото
+        </button>
+
+        <div style="margin-top: 25px; text-align: center;">
+            <a href="/gallery" style="
+                color: #4CAF50;
+                text-decoration: none;
+                font-size: 14px;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 20px;
+                border-radius: 20px;
+                transition: all 0.3s ease;
+            " onmouseover="this.style.backgroundColor='#f0fff0'" onmouseout="this.style.backgroundColor='transparent'">
+                <i class="fas fa-arrow-left"></i> Вернуться в галерею
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+    let selectedFiles = [];
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const selectFilesBtn = document.getElementById('selectFilesBtn');
+    const selectedFilesSection = document.getElementById('selectedFilesSection');
+    const filesList = document.getElementById('filesList');
+    const filesCount = document.getElementById('filesCount');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusMessage = document.getElementById('statusMessage');
+    const categorySelect = document.getElementById('categorySelect');
+    const newCategoryInput = document.getElementById('newCategoryInput');
+    const newCategory = document.getElementById('newCategory');
+
+    // Обработка перетаскивания файлов
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+    });
+
+    dropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+
+        if (e.dataTransfer.files.length) {
+            handleFileSelect(e.dataTransfer.files);
+        }
+    });
+
+    // Клик по кнопке выбора файлов
+    selectFilesBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    // Клик по зоне загрузки
+    dropZone.addEventListener('click', (e) => {
+        if (e.target !== selectFilesBtn && e.target !== fileInput) {
+            fileInput.click();
+        }
+    });
+
+    // Обработка выбора файлов
+    fileInput.addEventListener('change', (e) => {
+        handleFileSelect(e.target.files);
+    });
+
+    // Обработка категорий
+    categorySelect.addEventListener('change', () => {
+        if (categorySelect.value === 'Новая категория') {
+            newCategoryInput.style.display = 'block';
+            newCategory.focus();
+        } else {
+            newCategoryInput.style.display = 'none';
+        }
+    });
+
+    // Очистка всех файлов
+    clearAllBtn.addEventListener('click', () => {
+        selectedFiles = [];
+        updateFileList();
+        selectedFilesSection.style.display = 'none';
+        submitBtn.disabled = true;
+    });
+
+    function handleFileSelect(files) {
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        const validFiles = [];
+        let hasErrors = false;
+
+        Array.from(files).forEach(file => {
+            if (file.size > maxSize) {
+                showMessage(`Файл "${file.name}" слишком большой (${(file.size/1024/1024).toFixed(2)} MB). Максимум 10 MB.`, 'error');
+                hasErrors = true;
+                return;
+            }
+            if (!file.type.startsWith('image/')) {
+                showMessage(`Файл "${file.name}" не является изображением.`, 'error');
+                hasErrors = true;
+                return;
+            }
+            validFiles.push(file);
+        });
+
+        if (validFiles.length > 0) {
+            selectedFiles = [...selectedFiles, ...validFiles];
+            updateFileList();
+            selectedFilesSection.style.display = 'block';
+            submitBtn.disabled = false;
+        }
+
+        if (hasErrors) {
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 5000);
+        }
+    }
+
+    function updateFileList() {
+        filesList.innerHTML = '';
+
+        if (selectedFiles.length === 0) {
+            selectedFilesSection.style.display = 'none';
+            return;
+        }
+
+        filesCount.textContent = `${selectedFiles.length} файл${getPlural(selectedFiles.length)}`;
+
+        selectedFiles.forEach((file, index) => {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.dataset.index = index;
+
+            const fileIcon = document.createElement('i');
+            fileIcon.className = 'file-icon fas fa-file-image';
+
+            const fileDetails = document.createElement('div');
+            fileDetails.className = 'file-details';
+
+            const fileName = document.createElement('div');
+            fileName.className = 'file-name';
+            fileName.textContent = file.name;
+
+            const fileInfo = document.createElement('div');
+            fileInfo.className = 'file-info';
+            fileInfo.innerHTML = `
+                <span>${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                <span>${file.type.split('/')[1].toUpperCase()}</span>
+            `;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-file';
+            removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+            removeBtn.onclick = (e) => {
+                e.stopPropagation();
+                removeFile(index);
+            };
+
+            fileDetails.appendChild(fileName);
+            fileDetails.appendChild(fileInfo);
+            fileItem.appendChild(fileIcon);
+            fileItem.appendChild(fileDetails);
+            fileItem.appendChild(removeBtn);
+            filesList.appendChild(fileItem);
+        });
+    }
+
+    function removeFile(index) {
+        selectedFiles.splice(index, 1);
+        updateFileList();
+
+        if (selectedFiles.length === 0) {
+            selectedFilesSection.style.display = 'none';
+            submitBtn.disabled = true;
+        }
+    }
+
+    function getPlural(number) {
+        const lastDigit = number % 10;
+        const lastTwoDigits = number % 100;
+
+        if (lastTwoDigits >= 11 && lastTwoDigits <= 19) return 'ов';
+        if (lastDigit === 1) return '';
+        if (lastDigit >= 2 && lastDigit <= 4) return 'а';
+        return 'ов';
+    }
+
+    function showMessage(text, type) {
+        statusMessage.textContent = text;
+        statusMessage.className = `message ${type}`;
+        statusMessage.style.display = 'block';
+    }
+
+    async function uploadFiles() {
+        if (selectedFiles.length === 0) {
+            showMessage('Нет файлов для загрузки', 'error');
+            return;
+        }
+
+        const formData = new FormData();
+
+        // Добавляем категорию
+        let category = categorySelect.value;
+        if (category === 'Новая категория') {
+            category = newCategory.value.trim();
+            if (!category) {
+                showMessage('Введите название новой категории', 'error');
+                return;
+            }
+        }
+        formData.append('category', category || 'Без категории');
+
+        // Добавляем файлы
+        selectedFiles.forEach(file => {
+            formData.append('files', file);
+        });
+
+        // Изменяем состояние кнопки
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Загрузка...';
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.redirected) {
+                // Если сервер перенаправляет на галерею
+                window.location.href = response.url;
+                return;
+            }
+
+            const result = await response.json();
+
+            if (response.ok) {
+                showMessage(`✅ Успешно загружено ${selectedFiles.length} файл${getPlural(selectedFiles.length)}`, 'success');
+
+                // Перенаправление через 1.5 секунды
+                setTimeout(() => {
+                    window.location.href = '/gallery';
+                }, 1500);
+            } else {
+                showMessage(`❌ Ошибка: ${result.message || 'Неизвестная ошибка'}`, 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        } catch (error) {
+            showMessage(`❌ Ошибка соединения с сервером`, 'error');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    }
+
+    // Инициализация
+    submitBtn.addEventListener('click', uploadFiles);
+
+    // Загрузка по Enter
+    document.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !submitBtn.disabled) {
+            uploadFiles();
+        }
+    });
+
+    // Автоматически скрывать сообщения через 5 секунд
+    setInterval(() => {
+        if (statusMessage.style.display === 'block') {
+            statusMessage.style.display = 'none';
+        }
+    }, 5000);
+</script>
+
+</body>
+</html>
