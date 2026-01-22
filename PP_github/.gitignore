@@ -24,5 +24,20 @@ uploads/
 *.log
 *.sqlite3
 
-# Ignore everything in parent directory (Desktop)
-../*
+# Database
+*.db
+*.sqlite
+
+# Temp files
+*.tmp
+*.temp
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+
+# Secret files
+secrets.ini
+config.ini
+credentials.json
