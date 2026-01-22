@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photography Portfolio</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400&display=swap" rel="stylesheet">
+
+    <script src="{{ url_for('static', path='script.js') }}" defer></script>
+</head>
+<body>
+
+<div class="header">
+    <a href="/gallery" class="logo">Photography Portfolio</a>
+    <a href="/" class="nav-item">Главная</a>
+    <a href="/about_me" class="nav-item">Обо мне</a>
+    <a href="/gallery" class="nav-item">Галерея</a>
+    <a href="/upload" class="nav-item">Добавить фото</a>
+</div>
+
+
+
+<div class="foto">
+    <div class="foto-item">
+        <img src="{{ url_for('static', path='img/f1.jpg') }}" alt="Фото 1">
+    </div>
+    <div class="foto-item">
+        <img src="{{ url_for('static', path='img/f2.jpg') }}" alt="Фото 2">
+    </div>
+    <div class="foto-item">
+        <img src="{{ url_for('static', path='img/f3.jpg') }}" alt="Фото 3">
+    </div>
+    <div class="foto-item">
+        <img src="{{ url_for('static', path='img/f4.jpg') }}" alt="Фото 3">
+    </div>
+    <div class="foto-item">
+        <img src="{{ url_for('static', path='img/f5.jpg') }}" alt="Фото 3">
+    </div>
+    <div class="foto-item">
+        <img src="{{ url_for('static', path='img/f6.jpg') }}" alt="Фото 3">
+    </div>
+</div>
+
+
+
+</body>
+</html>

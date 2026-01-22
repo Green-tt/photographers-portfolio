@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление категориями</title>
+</head>
+<body>
+    <h1>Управление категориями</h1>
+    <form method="post" action="/categories/add">
+        <input type="text" name="category" placeholder="Название категории" required>
+        <button type="submit">Добавить категорию</button>
+    </form>
+
+    <h2>Существующие категории:</h2>
+    <ul>
+        {% for category in categories %}
+        <li>
+            {{ category }}
+            <form method="post" action="/categories/delete/{{ category }}" style="display: inline;">
+                <button type="submit" onclick="return confirm('Удалить категорию?')">Удалить</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="/gallery">Вернуться в галерею</a>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход</title>
+</head>
+<body>
+<div class="header">
+    <a href="/gallery" class="logo">Photography Portfolio</a>
+    <div class="nav-container">
+        <a href="/about_me" class="nav-item">Обо мне</a>
+        <a href="/gallery" class="nav-item">Галерея</a>
+        {% if user %}
+            <!-- Если пользователь уже вошел, показываем меню -->
+            <a href="/upload" class="nav-item">Добавить фото</a>
+            <div class="user-menu">
+                <span class="nav-item" style="color: #4CAF50; font-weight: 500;">
+                    <i class="fas fa-user-circle"></i> {{ user.username }}
+                </span>
+                <a href="/logout" class="nav-item" style="color: #f44336;">
+                    <i class="fas fa-sign-out-alt"></i> Выйти
+                </a>
+            </div>
+        {% else %}
+            <!-- Если не вошел, показываем стандартное меню -->
+            <a href="/upload" class="nav-item">Добавить фото</a>
+            {% if request.url.path == '/login' %}
+                <a href="/login" class="nav-item active">Вход</a>
+            {% else %}
+                <a href="/login" class="nav-item">Вход</a>
+            {% endif %}
+
+            {% if request.url.path == '/register' %}
+                <a href="/register" class="nav-item active">Регистрация</a>
+            {% else %}
+                <a href="/register" class="nav-item">Регистрация</a>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+    <h1>Вход</h1>
+    {% if error %}
+    <div style="color: red">{{ error }}</div>
+    {% endif %}
+    <form method="post" action="/login">
+        <input type="hidden" name="next_url" value="{{ next_url }}">
+        <div>
+            <label>Имя пользователя:</label>
+            <input type="text" name="username" required>
+        </div>
+        <div>
+            <label>Пароль:</label>
+            <input type="password" name="password" required>
+        </div>
+        <button type="submit">Войти</button>
+    </form>
+    <p>Нет аккаунта? <a href="/register">Зарегистрироваться</a></p>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About & Contact</title>
+     <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+      body {
+            margin: 0;
+            font-family: 'Raleway', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+     .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+.nav-container {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-item {
+            color: #666;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 16px;
+            transition: color 0.3s ease;
+            padding: 5px 0;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            color: #333;
+        }
+
+
+
+      .logo {
+            font-size: 24px;
+            font-weight: 300;
+            color: #333;
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: #777;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        nav ul li {
+            margin-right: 30px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #555;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #000;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 300;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 60px 0;
+            border-bottom: 1px solid #eaeaea;
+            background-color: white;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .about-text {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+        }
+
+
+        /* Contact Section */
+        .contact-section {
+            padding: 80px 0;
+            background-color: white;
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .contact-info h3 {
+            font-size: 20px;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+
+        .contact-info p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .contact-details {
+            margin-top: 30px;
+        }
+
+        .contact-item {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .contact-icon {
+            width: 20px;
+            margin-right: 15px;
+            color: #777;
+        }
+
+        .contact-item a {
+            color: #555;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        .contact-item a:hover {
+            color: #000;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            background-color: #f9f9f9;
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            font-family: 'Arial', sans-serif;
+            background-color: white;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #555;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            color: #777;
+            border-top: 1px solid #eaeaea;
+            background-color: white;
+        }
+
+        .social-links {
+            margin-bottom: 20px;
+        }
+
+        .social-links a {
+            color: #777;
+            margin: 0 15px;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #333;
+        }
+
+        .copyright {
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .about-content,
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 0 30px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .section-title {
+                font-size: 22px;
+            }
+
+            .contact-form {
+                padding: 30px 20px;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+            }
+
+            nav ul li {
+                margin-right: 20px;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<div class="header">
+    <a href="/gallery" class="logo">Photography Portfolio</a>
+    <div class="nav-container">
+        <a href="/about_me" class="nav-item">Обо мне</a>
+        <a href="/gallery" class="nav-item">Галерея</a>
+        {% if user %}
+            <!-- Для авторизованных пользователей -->
+            <a href="/upload" class="nav-item">Добавить фото</a>
+            <a href="/categories" class="nav-item">Категории</a>
+            <div class="user-menu">
+                <span class="nav-item" style="color: #4CAF50; font-weight: 500;">
+                    <i class="fas fa-user-circle"></i> {{ user.username }}
+                    {% if user.role == 'admin' %}
+                        <span style="font-size: 12px; background: #4CAF50; color: white; padding: 2px 6px; margin-left: 5px; border-radius: 3px;">Admin</span>
+                    {% endif %}
+                </span>
+                <a href="/logout" class="nav-item" style="color: #f44336;">
+                    <i class="fas fa-sign-out-alt"></i> Выйти
+                </a>
+            </div>
+        {% else %}
+            <!-- Для неавторизованных пользователей -->
+            <a href="/login" class="nav-item">Вход</a>
+            <a href="/register" class="nav-item">Регистрация</a>
+        {% endif %}
+    </div>
+</div>
+<!-- Hero -->
+<section class="hero">
+    <div class="container">
+        <!--        <h1>About & Contact</h1>-->
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about-section">
+    <div class="container">
+        <h2 class="section-title">About</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p>Hello, I'm Tommaso Bacchelli, a creative professional specializing in visual design and digital
+                    experiences. With over a decade of experience, I've worked with clients ranging from startups to
+                    global brands, helping them bring their ideas to life through thoughtful design.</p>
+                <p>My approach combines aesthetic sensibility with functional clarity, creating work that is both
+                    beautiful and effective. I believe in the power of simplicity and the importance of storytelling in
+                    design.</p>
+                <p>When I'm not designing, you can find me exploring new technologies, traveling, or experimenting with
+                    photography. I'm passionate about the intersection of art and technology and how it shapes our daily
+                    experiences.</p>
+            </div>
+            <div class="about-image"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section">
+    <div class="container">
+        <h2 class="section-title">Contact</h2>
+        <div class="contact-content">
+            <div class="contact-info">
+                <h3>Get in Touch</h3>
+                <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your
+                    vision. Feel free to reach out through the contact form or directly via email.</p>
+
+                <div class="contact-details">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <a href="mailto:hello@tommasobacchelli.com">hello@tommasobacchelli.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <a href="tel:+390123456789">+39 012 345 6789</a>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <a href="#">Milan, Italy</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="social-links">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-behance"></i></a>
+        </div>
+        <div class="copyright">
+            &copy; 2023 Tommaso Bacchelli. All rights reserved.
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Form submission handling
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get form values
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const message = document.getElementById('message').value;
+
+        // In a real implementation, you would send this data to a server
+        // For this example, we'll just show an alert
+        alert(`Thank you ${name}! Your message has been sent. I'll get back to you at ${email} as soon as possible.`);
+
+        // Reset the form
+        document.getElementById('contactForm').reset();
+    });
+</script>
+</body>
+</html>
