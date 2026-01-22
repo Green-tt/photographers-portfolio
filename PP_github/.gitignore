@@ -1,23 +1,28 @@
-# Byte-compiled / optimized / DLL files
+﻿# Python
 __pycache__/
-*.py[cod]
-*$py.class
-
-# SQLite DB
-database.db
-
-# Environment
-.env
-.venv/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
 venv/
+.venv/
+.env
 
 # IDE
-.vscode/
 .idea/
+.vscode/
+*.swp
+*.swo
 
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 
-# Compiled
+# Project specific
+uploads/
 *.log
+*.sqlite3
+
+# Ignore everything in parent directory (Desktop)
+../*
